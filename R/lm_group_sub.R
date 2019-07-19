@@ -82,9 +82,9 @@ lm_group_sub <- function(indx_coef,
       # get residual
       back_coef <- c(1, indx_coef)
       fitted <- get_fitted_values(lm.obj, back_coef)
-      colnames(fitted$raw.value_adjusted) <- tmp.data$r.n.
-      colnames(fitted$fitted.value) <- tmp.data$r.n.
-      colnames(fitted$fitted.value_adjusted) <- tmp.data$r.n.
+      colnames(fitted$raw_value_adjusted) <- tmp.data$r.n.
+      colnames(fitted$fitted_value) <- tmp.data$r.n.
+      colnames(fitted$fitted_value_adjusted) <- tmp.data$r.n.
       return(list(DS.ordinary = DS.ordinary,
                   fitted = fitted))
     }
