@@ -1,4 +1,4 @@
-myTopTable <- function(lm.obj,
+assemble_top_table <- function(lm.obj,
                        contrast.matrix,
                        PRIMARY_COV){
   linfct <- list(t(contrast.matrix))
