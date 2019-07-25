@@ -1,6 +1,4 @@
 run_group_test <- function(PARAM, expdata){
-  # comment out library loading
-  # library(limma)
   # drop NA: find rows which don't have missing values in the primary phenotype
   indx <- !is.na(expdata$sample.ann[[PARAM[["PRIMARY_COVS"]]]])
   # in the data, retain only the samples without missing values in the
@@ -13,11 +11,8 @@ run_group_test <- function(PARAM, expdata){
   # primary covariate has a variation?
   # stop execution if the primary phenotype has fewer or equal to one unique
   # value
-  # ATTENTION ----
-  # Replace message and return() with stop(message)
   if (length(unique(expdata$sample.ann[[PARAM[["PRIMARY_COVS"]]]])) <= 1) {
-    message("phenotype has no variation")
-    return()
+    stop("phenotype has no variation")
   }
 
   # ATTENTION ----
@@ -31,7 +26,7 @@ run_group_test <- function(PARAM, expdata){
   # and has a value (TRUE or FALSE).
   if (is.factor(expdata$sample.ann[[PARAM[["PRIMARY_COVS"]]]]) &&
       min(table(expdata$sample.ann[[PARAM[["PRIMARY_COVS"]]]])) < 2) {
-    if(is.null(PARAM$ignore_sample_size) || !PARAM$ignore_sample_size) {
+    if(is.null(PARAM$ignore_sample_size) || ! PARAM$ignore_sample_size) {
       message("minimum phenotype group should have 3 samples at least")
       unlink(list.files(PARAM$OUTLOC,full.names = T))
       return()
