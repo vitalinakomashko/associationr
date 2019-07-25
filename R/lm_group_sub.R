@@ -75,7 +75,7 @@ lm_group_sub <- function(indx_coef,
                                    fixed = TRUE) > 0)
       }
       DS.ordinary <- list()
-      DS.ordinary[[suffix]] <- myTopTable_coef(lm.obj, indx_coef)
+      DS.ordinary[[suffix]] <- assemble_top_table_coef(lm.obj, indx_coef)
       DS.ordinary[[suffix]]$ID <- orig_name[j]
       DS.ordinary[[suffix]]$AveExpr <- mean(tmp.data[[y]])
 
@@ -127,7 +127,7 @@ lm_group_sub <- function(indx_coef,
     if (ncol(contrast.matrix) == 1) {
       suffix <- contrast.group
       # single contrast
-      DS.ordinary[[suffix]] <- myTopTable(lm.obj,
+      DS.ordinary[[suffix]] <- assemble_top_table(lm.obj,
                                           contrast.matrix[indx_coef, , drop = FALSE],
                                           PRIMARY_COV)
       DS.ordinary[[suffix]]$ID <- orig_name[j]
@@ -135,14 +135,14 @@ lm_group_sub <- function(indx_coef,
     } else {
       #ANOVA
       suffix <- "ANOVA"
-      DS.ordinary[[suffix]] <- myTopTable(lm.obj,
+      DS.ordinary[[suffix]] <- assemble_top_table(lm.obj,
                                           contrast.matrix[indx_coef, , drop = FALSE],
                                           PRIMARY_COV)
       DS.ordinary[[suffix]]$ID <- orig_name[j]
       DS.ordinary[[suffix]]$AveExpr <- mean(tmp.data[[y]])
       for (suffix in unique(contrast.group)) {
         # each contrast
-        DS.ordinary[[suffix]] <- myTopTable(lm.obj,
+        DS.ordinary[[suffix]] <- assemble_top_table(lm.obj,
                                             contrast.matrix[indx_coef,
                                                             colnames(contrast.matrix)[contrast.group== suffix],
                                                             drop=FALSE],
