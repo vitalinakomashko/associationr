@@ -47,8 +47,8 @@ verify_parameters <- function(param_list){
   }
 
   # check mandatory
-  min_needed <- c("primary_covs", "test_method")
-  for(i in min_needed){
+  mandatory <- c("primary_covs", "test_method")
+  for(i in mandatory){
     if (!(i %in% names(param_list))) {
       stop("Expecting mandatory parameter ", i, " in `param_list`, ",
            "however, did not find it.",
@@ -58,7 +58,7 @@ verify_parameters <- function(param_list){
 
   # check that test_method is set to either limma or lm
   test_method_allowed <- c("limma", "lm")
-  if (param_list$test_method != "limma" | param_list$test_method != "lm") {
+  if (param_list$test_method != "limma" & param_list$test_method != "lm") {
     stop("Parameter `test_method` in `param_list` can be 'limma' or 'lm', ",
          "however, found ", param_list$test_method, ".",
          call. = FALSE)
@@ -67,7 +67,7 @@ verify_parameters <- function(param_list){
   # if voom is present verify that voom_calc_norm_factors_method and
   # voom_normalize_method are also present
   if ("voom" %in% names(param_list)) {
-    if (!(any(c("voom_calc_norm_factors_method", "voom_normalize_method") %in%
+    if (!(all(c("voom_calc_norm_factors_method", "voom_normalize_method") %in%
               names(param_list)))) {
       stop("Parameter `voom` is present, however, ",
            "either `voom_calc_norm_factors_method` or `voom_normalize_method` ",
