@@ -64,14 +64,22 @@ verify_parameters <- function(param_list){
          call. = FALSE)
   }
 
-  # if voom is present verify that voom_calc_norm_factors_method and
+  # if voom is present verify that norm_factors_method and
   # voom_normalize_method are also present
   if ("voom" %in% names(param_list)) {
-    if (!(all(c("voom_calc_norm_factors_method", "voom_normalize_method") %in%
+    if (!(all(c("norm_factors_method", "voom_normalize_method") %in%
               names(param_list)))) {
       stop("Parameter `voom` is present, however, ",
-           "either `voom_calc_norm_factors_method` or `voom_normalize_method` ",
+           "either `norm_factors_method` or `voom_normalize_method` ",
            "are not present.",
+           call. = FALSE)
+    }
+    norm_factors_method <- c("TMM", "TMMwsp", "RLE", "upperquartile", "none")
+    if (!(any(norm_factor_method %in% param_list$norm_factors_method))) {
+      stop("Unexpected value for 'norm_factor_method' in `param_list`, ",
+           "should be one of the following: 'TMM', 'TMMwsp', 'RLE', ",
+           "'upperquartile' or 'none'. See `edgeR::calcNormFactors()` ",
+           "for documentation.",
            call. = FALSE)
     }
   }
