@@ -40,7 +40,7 @@ test_that("voom parameters", {
                  test_method = "limma",
                  adjust_covs = "NULL",
                  voom = TRUE,
-                 voom_calc_norm_factors_method = "method")
+                 norm_factors_method = "method")
   expect_error(verify_parameters(params))
   params <- list(primary_covs = "Group",
                  test_method = "limma",
