@@ -1,0 +1,74 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# associationr
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of associationr is to ...
+
+## Installation
+
+You can install the released version of associationr from [github](https://github.com/vitalinakomashko/associationr) with:
+
+``` r
+if (!("remotes" %in% installed.packages()[, "Package"])){
+ install.packages("remotes")
+}
+remotes::install_github("vitalinakomashko/associationr")
+```
+
+
+## Parameters
+
+As the first step you need to provide analysis parameters. Parameters should be
+stored in a YAML file, see documentation about formatting [here](https://en.wikipedia.org/wiki/YAML).
+
+Parameter | Meaning | Mandatory? | Values
+----------|---------|-------------|-------
+**primary_covs** | Main phenotype to be investigated |  YES |
+**adjust_covs** | Covariates to adjust for | |
+**test_method** | Method | YES | limma or lm
+**interact_covs** |  If interactions should be investigated | NO | 
+**block_covs** | If mixed-effect modeling should be performed | 
+**spline_fun** | If time-dependent effect should be investigated | NO | 
+**ignore_sample_size** | | |
+**voom** | | | If **voom** is provided then both **voom_calc_norm_factors_method** and **voom_normalize_method** must be provided
+**voom_calc_norm_factors_method** |  | |
+**voom_normalize_method** | | |
+
+### Example of a YAML file with the analysis parameters
+
+Quotes are not necessary aroung the values. Both ways (primary_covs: Group and
+primary_covs: "Group") work.
+
+```
+primary_covs: Group
+adjust_covs: Cov1
+test_method: LM
+interact_covs: Cov2
+```
+
+
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example, eval=FALSE}
+library(associationr)
+## basic example code
+```
+
