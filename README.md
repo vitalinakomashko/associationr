@@ -27,18 +27,18 @@ As the first step you need to provide analysis parameters. Parameters
 should be stored in a YAML file, see documentation about formatting
 [here](https://en.wikipedia.org/wiki/YAML).
 
-| Parameter                             | Meaning                                         | Mandatory? | Values                                                                                                                   |
-| ------------------------------------- | ----------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **primary\_covs**                     | Main phenotype to be investigated               | YES        |                                                                                                                          |
-| **adjust\_covs**                      | Covariates to adjust for                        |            |                                                                                                                          |
-| **test\_method**                      | Method                                          | YES        | limma or lm                                                                                                              |
-| **interact\_covs**                    | If interactions should be investigated          | NO         |                                                                                                                          |
-| **block\_covs**                       | If mixed-effect modeling should be performed    |            |                                                                                                                          |
-| **spline\_fun**                       | If time-dependent effect should be investigated | NO         |                                                                                                                          |
-| **ignore\_sample\_size**              |                                                 |            |                                                                                                                          |
-| **voom**                              |                                                 |            | If **voom** is provided then both **voom\_calc\_norm\_factors\_method** and **voom\_normalize\_method** must be provided |
-| **voom\_calc\_norm\_factors\_method** |                                                 |            |                                                                                                                          |
-| **voom\_normalize\_method**           |                                                 |            |                                                                                                                          |
+| Parameter                   | Meaning                                         | Mandatory? | Values                                                                                                                                                             |
+| --------------------------- | ----------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **primary\_covs**           | Main phenotype to be investigated               | YES        |                                                                                                                                                                    |
+| **adjust\_covs**            | Covariates to adjust for                        |            |                                                                                                                                                                    |
+| **test\_method**            | Method                                          | YES        | limma or lm                                                                                                                                                        |
+| **interact\_covs**          | If interactions should be investigated          | NO         |                                                                                                                                                                    |
+| **block\_covs**             | If mixed-effect modeling should be performed    |            |                                                                                                                                                                    |
+| **spline\_fun**             | If time-dependent effect should be investigated | NO         |                                                                                                                                                                    |
+| **ignore\_sample\_size**    |                                                 |            |                                                                                                                                                                    |
+| **voom**                    |                                                 |            | If **voom** is provided then both **norm\_factors\_method** and **voom\_normalize\_method** must be provided                                                       |
+| **norm\_factors\_method**   |                                                 |            | TMM, TMMwsp, RLE, upperquartile, none. See [edgeR::calcNormFactors](https://bioconductor.org/packages/release/bioc/html/edgeR.html) for documentation (v. 3.26.5). |
+| **voom\_normalize\_method** |                                                 |            |                                                                                                                                                                    |
 
 ### Example of a YAML file with the analysis parameters
 

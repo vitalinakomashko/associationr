@@ -45,8 +45,8 @@ Parameter | Meaning | Mandatory? | Values
 **block_covs** | If mixed-effect modeling should be performed | 
 **spline_fun** | If time-dependent effect should be investigated | NO | 
 **ignore_sample_size** | | |
-**voom** | | | If **voom** is provided then both **voom_calc_norm_factors_method** and **voom_normalize_method** must be provided
-**voom_calc_norm_factors_method** |  | |
+**voom** | | | If **voom** is provided then both **norm_factors_method** and **voom_normalize_method** must be provided
+**norm_factors_method** |  | | TMM, TMMwsp, RLE, upperquartile, none. See [edgeR::calcNormFactors](https://bioconductor.org/packages/release/bioc/html/edgeR.html) for documentation (v. 3.26.5).
 **voom_normalize_method** | | |
 
 ### Example of a YAML file with the analysis parameters
