@@ -63,6 +63,18 @@ following yaml formatting should be used:
      norm_factors_method: TMM
      voom_normalize_method: none
 
+### Prepare the data
+
+The data should be organized in a named list with three components:
+
+  - `data` - expression data of class matrix, EList or DGEList.
+  - `gene_ann` - gene annotation data of class data frame. Number of
+    rows is expected to be equal to the number of rows in `data` with
+    the names.
+  - `sample_ann` - sample annotation data of class data frame. Number of
+    rows is expected to be equal to the number of columns in `data` with
+    the same names.
+
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
