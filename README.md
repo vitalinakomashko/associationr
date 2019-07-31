@@ -27,28 +27,41 @@ As the first step you need to provide analysis parameters. Parameters
 should be stored in a YAML file, see documentation about formatting
 [here](https://en.wikipedia.org/wiki/YAML).
 
-| Parameter                   | Meaning                                         | Mandatory? | Values                                                                                                                                                             |
-| --------------------------- | ----------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **primary\_covs**           | Main phenotype to be investigated               | YES        |                                                                                                                                                                    |
-| **adjust\_covs**            | Covariates to adjust for                        |            |                                                                                                                                                                    |
-| **test\_method**            | Method                                          | YES        | limma or lm                                                                                                                                                        |
-| **interact\_covs**          | If interactions should be investigated          | NO         |                                                                                                                                                                    |
-| **block\_covs**             | If mixed-effect modeling should be performed    |            |                                                                                                                                                                    |
-| **spline\_fun**             | If time-dependent effect should be investigated | NO         |                                                                                                                                                                    |
-| **ignore\_sample\_size**    |                                                 |            |                                                                                                                                                                    |
-| **voom**                    |                                                 |            | If **voom** is provided then both **norm\_factors\_method** and **voom\_normalize\_method** must be provided                                                       |
-| **norm\_factors\_method**   |                                                 |            | TMM, TMMwsp, RLE, upperquartile, none. See [edgeR::calcNormFactors](https://bioconductor.org/packages/release/bioc/html/edgeR.html) for documentation (v. 3.26.5). |
-| **voom\_normalize\_method** |                                                 |            |                                                                                                                                                                    |
+| Parameter                   | Meaning                                                                                                      | Mandatory?       | Values                                                                                                                                                                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **primary\_covs**           | Main phenotype to be investigated                                                                            | YES              | Column name in the sample annotation data frame                                                                                                                                                                                    |
+| **adjust\_covs**            | Covariates to adjust for                                                                                     | YES              | Column name in the sample annotation data frame                                                                                                                                                                                    |
+| **test\_method**            | Method                                                                                                       | YES              | “limma” or “lm”                                                                                                                                                                                                                    |
+| **interact\_covs**          | If interactions should be investigated                                                                       | NO               |                                                                                                                                                                                                                                    |
+| **block\_covs**             | If mixed-effect modeling should be performed                                                                 | NO               |                                                                                                                                                                                                                                    |
+| **spline\_fun**             | If time-dependent effect should be investigated                                                              | NO               |                                                                                                                                                                                                                                    |
+| **ignore\_sample\_size**    |                                                                                                              | NO               |                                                                                                                                                                                                                                    |
+| **voom**                    | If **voom** is provided then both **norm\_factors\_method** and **voom\_normalize\_method** must be provided | NO               |                                                                                                                                                                                                                                    |
+| **norm\_factors\_method**   | Normalization method to be used for calculation of normalization factors to scale the raw library sizes      | YES, if **voom** | “TMM”, “TMMwsp”, “RLE”, “upperquartile”, “none”. See [edgeR::calcNormFactors](https://bioconductor.org/packages/release/bioc/html/edgeR.html) for documentation (v. 3.26.5).                                                       |
+| **voom\_normalize\_method** | The microarray-style normalization method to be applied to the logCPM values (if any)                        | YES, if **voom** | “none”, “scale”, “quantile” or “cyclicloess”. See [limma::voom](http://bioconductor.org/packages/release/bioc/html/limma.html) and [limma::normalizeBetweenArrays](http://bioconductor.org/packages/release/bioc/html/limma.html). |
 
 ### Example of a YAML file with the analysis parameters
 
-Quotes are not necessary aroung the values. Both ways (primary\_covs:
-Group and primary\_covs: “Group”) work.
+Quotes are not necessary around the values, both ‘primary\_covs: Group’
+and ‘primary\_covs: “Group”’ are acceptable.
 
     primary_covs: Group
     adjust_covs: Cov1
-    test_method: LM
+    test_method: lm
     interact_covs: Cov2
+
+If the input data is RNA-seq and normalization factors should be
+calculated using `edgeR::calcNormFactors` and the data should be
+transformed to prepare for linear modeling using `limma::voom` then the
+following yaml formatting should be used:
+
+    primary_covs: Group
+    adjust_covs: Cov1
+    test_method: lm
+    interact_covs: Cov2
+    voom:
+     norm_factors_method: TMM
+     voom_normalize_method: none
 
 ## Example
 

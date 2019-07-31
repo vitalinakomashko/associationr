@@ -38,27 +38,40 @@ stored in a YAML file, see documentation about formatting [here](https://en.wiki
 
 Parameter | Meaning | Mandatory? | Values
 ----------|---------|-------------|-------
-**primary_covs** | Main phenotype to be investigated |  YES |
-**adjust_covs** | Covariates to adjust for | |
-**test_method** | Method | YES | limma or lm
+**primary_covs** | Main phenotype to be investigated |  YES | Column name in the sample annotation data frame
+**adjust_covs** | Covariates to adjust for | YES | Column name in the sample annotation data frame
+**test_method** | Method | YES | "limma" or "lm"
 **interact_covs** |  If interactions should be investigated | NO | 
-**block_covs** | If mixed-effect modeling should be performed | 
+**block_covs** | If mixed-effect modeling should be performed | NO
 **spline_fun** | If time-dependent effect should be investigated | NO | 
-**ignore_sample_size** | | |
-**voom** | | | If **voom** is provided then both **norm_factors_method** and **voom_normalize_method** must be provided
-**norm_factors_method** |  | | TMM, TMMwsp, RLE, upperquartile, none. See [edgeR::calcNormFactors](https://bioconductor.org/packages/release/bioc/html/edgeR.html) for documentation (v. 3.26.5).
-**voom_normalize_method** | | |
+**ignore_sample_size** | | NO |
+**voom** | If **voom** is provided then both **norm_factors_method** and **voom_normalize_method** must be provided | NO |  
+**norm_factors_method** | Normalization method to be used for calculation of normalization factors to scale the raw library sizes| YES, if **voom** | "TMM", "TMMwsp", "RLE", "upperquartile", "none". See [edgeR::calcNormFactors](https://bioconductor.org/packages/release/bioc/html/edgeR.html) for documentation (v. 3.26.5).
+**voom_normalize_method** | The microarray-style normalization method to be applied to the logCPM values (if any) | YES, if **voom** | "none", "scale", "quantile" or "cyclicloess". See [limma::voom](http://bioconductor.org/packages/release/bioc/html/limma.html) and [limma::normalizeBetweenArrays](http://bioconductor.org/packages/release/bioc/html/limma.html).
 
 ### Example of a YAML file with the analysis parameters
 
-Quotes are not necessary aroung the values. Both ways (primary_covs: Group and
-primary_covs: "Group") work.
+Quotes are not necessary around the values, both 'primary_covs: Group' and
+'primary_covs: "Group"' are acceptable. 
 
 ```
 primary_covs: Group
 adjust_covs: Cov1
-test_method: LM
+test_method: lm
 interact_covs: Cov2
+```
+If the input data is RNA-seq and normalization factors should be calculated using
+`edgeR::calcNormFactors` and the data should be transformed to prepare for linear
+modeling using `limma::voom` then the following yaml formatting should be used: 
+
+```
+primary_covs: Group
+adjust_covs: Cov1
+test_method: lm
+interact_covs: Cov2
+voom:
+ norm_factors_method: TMM
+ voom_normalize_method: none
 ```
 
 
