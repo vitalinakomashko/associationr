@@ -1,53 +1,54 @@
 test_that("verify length", {
   params <- list()
-  expect_error(verify_parameters(params))
-  params <- list(primary_covs = "Group")
-  expect_error(verify_parameters(params))
+  expect_error(verify_parameters(params), "at least three parameters")
 })
 
 
 test_that("missing mandatory parameters", {
   params <- list(primary_covs = "Group", adjust_covs = "Cov1")
-  expect_error(verify_parameters(params))
+  expect_error(verify_parameters(params),
+               "Expecting mandatory parameter")
+  params <- list(primary_covs = "Group",
+                 adjust_covs = "Cov1",
+                 test_method = "NULL")
+  expect_error(verify_parameters(params),
+               "Expecting mandatory parameter")
 })
 
 
 test_that("remove NULL", {
   params <- list(primary_covs = "Group",
                  test_method = "limma",
-                 adjust_covs = "NULL")
+                 adjust_covs = "Group1",
+                 something_else = "NULL")
   expect_equal(verify_parameters(params),
                list(primary_covs = "Group",
-                    test_method = "limma"))
+                    test_method = "limma",
+                    adjust_covs = "Group1"))
 })
 
 
 test_that("verify test method", {
   params <- list(primary_covs = "Group",
                  test_method = "PCA",
-                 adjust_covs = "NULL")
-  expect_error(verify_parameters(params))
+                 adjust_covs = "Group1")
+  expect_error(verify_parameters(params), "'limma' or 'lm'")
 })
 
 
 test_that("voom parameters", {
   params <- list(primary_covs = "Group",
                  test_method = "limma",
-                 adjust_covs = "NULL",
-                 voom = TRUE)
-  expect_error(verify_parameters(params))
+                 adjust_covs = "Group1",
+                 voom = list())
+  expect_error(verify_parameters(params),
+               "`norm_factors_method` or `voom_normalize_method` are not present.")
   params <- list(primary_covs = "Group",
                  test_method = "limma",
-                 adjust_covs = "NULL",
-                 voom = TRUE,
-                 norm_factors_method = "method")
-  expect_error(verify_parameters(params))
-  params <- list(primary_covs = "Group",
-                 test_method = "limma",
-                 adjust_covs = "NULL",
-                 voom = TRUE,
-                 voom_normalize_method = "method")
-  expect_error(verify_parameters(params))
+                 adjust_covs = "Group1",
+                 voom = list(norm_factors_method = "method",
+                             voom_normalize_method = "method"))
+  expect_error(verify_parameters(params), "Unexpected value")
 })
 
 
