@@ -36,7 +36,7 @@ verify_parameters <- function(param_list){
 
   # check list length
   if (length(param_list) == 0) {
-    stop("Expecting at least two parameters for analysis in `param_list`, ",
+    stop("Expecting at least three parameters for analysis in `param_list`, ",
          "however, zero provided.",
          call. = FALSE)
   }
@@ -47,7 +47,7 @@ verify_parameters <- function(param_list){
   }
 
   # check mandatory
-  mandatory <- c("primary_covs", "test_method")
+  mandatory <- c("primary_covs", "test_method", "adjust_covs")
   for(i in mandatory){
     if (!(i %in% names(param_list))) {
       stop("Expecting mandatory parameter ", i, " in `param_list`, ",
@@ -68,18 +68,25 @@ verify_parameters <- function(param_list){
   # voom_normalize_method are also present
   if ("voom" %in% names(param_list)) {
     if (!(all(c("norm_factors_method", "voom_normalize_method") %in%
-              names(param_list)))) {
+              names(param_list$voom)))) {
       stop("Parameter `voom` is present, however, ",
            "either `norm_factors_method` or `voom_normalize_method` ",
            "are not present.",
            call. = FALSE)
     }
     norm_factors_method <- c("TMM", "TMMwsp", "RLE", "upperquartile", "none")
-    if (!(any(norm_factor_method %in% param_list$norm_factors_method))) {
+    if (!(any(norm_factors_method %in% param_list$voom$norm_factors_method))) {
       stop("Unexpected value for 'norm_factor_method' in `param_list`, ",
            "should be one of the following: 'TMM', 'TMMwsp', 'RLE', ",
            "'upperquartile' or 'none'. See `edgeR::calcNormFactors()` ",
            "for documentation.",
+           call. = FALSE)
+    }
+    voom_normalize_method <- c("none", "scale", "quantile", "cyclicloess")
+    if(!any(voom_normalize_method %in% param_list$voom$voom_normalize_method)) {
+      stop("Unexpected value for 'voom_normalize_method' in `param_list`, ",
+           "should be one of the following: 'none', 'scale', 'quantile' or ",
+           "'cyclicloess'. See `limma::voom()` for documentation.",
            call. = FALSE)
     }
   }
