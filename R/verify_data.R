@@ -188,7 +188,7 @@ verify_expdata <- function(expdata){
   expdata$data <- expdata$data[, indx]
   # in the sample annotation data frame also keep the samples without missing
   # values in the primary phenotype
-  expdata$sample_ann <- expdata$sample_ann[indx, , drop=FALSE]
+  expdata$sample_ann <- expdata$sample_ann[indx, , drop = FALSE]
 
 
   # require that the main phenotype (primary_covs) has more than 1 unique value
@@ -200,7 +200,7 @@ verify_expdata <- function(expdata){
   }
 
 
-   # if the primary phenotype is a categorical variable and the smallest number of
+  # if the primary phenotype is a categorical variable and the smallest number of
   # samples in per category is less than 2 then we check the parameter
   # ignore_sample_size.
   # if ignore_sample_size is absent or FALSE then the function exits. Otherwise,
