@@ -45,9 +45,11 @@ Parameter | Meaning | Mandatory? | Values
 **block_covs** | If mixed-effect modeling should be performed | NO
 **spline_fun** | If time-dependent effect should be investigated | NO | 
 **ignore_sample_size** | If the parameter is provided and set to TRUE, then small number of samples (less than 3) per category in the **primary_covs** will be ignored, but a message will be printed. If the parameter is not provided or set to FALSE, then the function will provide an error.| NO | TRUE, FALSE or don't provide
-**voom** | If **voom** is provided then both **norm_factors_method** and **voom_normalize_method** must be provided | NO |  
-**norm_factors_method** | Normalization method to be used for calculation of normalization factors to scale the raw library sizes| YES, if **voom** | "TMM", "TMMwsp", "RLE", "upperquartile", "none". See [edgeR::calcNormFactors](https://bioconductor.org/packages/release/bioc/html/edgeR.html) for documentation (v. 3.26.5).
-**voom_normalize_method** | The microarray-style normalization method to be applied to the logCPM values (if any) | YES, if **voom** | "none", "scale", "quantile" or "cyclicloess". See [limma::voom](http://bioconductor.org/packages/release/bioc/html/limma.html) and [limma::normalizeBetweenArrays](http://bioconductor.org/packages/release/bioc/html/limma.html).
+~~**voom**~~ | ~~If **voom** is provided then both **norm_factors_method** and **voom_normalize_method** must be provided~~ | ~~NO~~ |  
+~~**norm_factors_method**~~ | ~~Normalization method to be used for calculation of normalization factors to scale the raw library sizes~~| ~~YES, if **voom**~~ | ~~"TMM", "TMMwsp", "RLE", "upperquartile", "none". See [edgeR::calcNormFactors](https://bioconductor.org/packages/release/bioc/html/edgeR.html) for documentation (v. 3.26.5).~~
+~~**voom_normalize_method**~~ | ~~The microarray-style normalization method to be applied to the logCPM values (if any)~~ | ~~YES, if **voom**~~ | ~~"none", "scale", "quantile" or "cyclicloess". See [limma::voom](http://bioconductor.org/packages/release/bioc/html/limma.html) and [limma::normalizeBetweenArrays](http://bioconductor.org/packages/release/bioc/html/limma.html).~~
+
+* 2019-08-12: **voom** as an option is not currently implemented.
 
 ### Example of a YAML file with the analysis parameters
 
@@ -60,9 +62,9 @@ adjust_covs: Cov1
 test_method: lm
 interact_covs: Cov2
 ```
-If the input data is RNA-seq and normalization factors should be calculated using
+~~If the input data is RNA-seq and normalization factors should be calculated using
 `edgeR::calcNormFactors` and the data should be transformed to prepare for linear
-modeling using `limma::voom` then the following yaml formatting should be used: 
+modeling using `limma::voom` then the following yaml formatting should be used:~~ 
 
 ```
 primary_covs: Group
@@ -78,7 +80,7 @@ voom:
 
 The data should be organized in a named list with three components:
 
-- `data` - expression data of class matrix, EList or DGEList.
+- `data` - expression data of class matrix, ~~EList or DGEList~~.
 - `gene_ann` - gene annotation data of class data frame. Number of rows is 
 expected to be equal to the number of rows in `data` with the names.
 - `sample_ann` - sample annotation data of class data frame. Number of rows is
