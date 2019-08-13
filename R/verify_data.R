@@ -171,14 +171,16 @@ verify_expdata <- function(expdata){
   # verify their type: should be numeric, factor or integer
   for(i in names(provided_params)){
     k <- provided_params[[i]]
-    if(!(is.integer(expdata$sample_ann[[k]]) |
-       is.numeric(expdata$sample_ann[[k]]) |
-       is.factor(expdata$sample_ann[[k]]))){
-      stop("Expected class of ", i, " in `expdata$sample_ann` is integer, ",
-           "numeric or factor.",
+    column_accepted_types <- all(sapply(expdata$sample_ann[, k, drop = FALSE],
+                                     function(x) test_column_type(x)))
+    if (!column_accepted_types) {
+      stop("Expected classes of columns `expdata$sample_ann` for values of ", i,
+           " are integer, numeric or factor.",
            call. = FALSE)
     }
   }
+
+
 
   primary_covs <- param_list[["primary_covs"]]
 
@@ -291,4 +293,17 @@ verify_expdata <- function(expdata){
   }
 
   return(list(expdata = expdata, param_list = param_list))
+}
+
+
+#' Test vector type
+#' @param vector
+#' @return TRUE if the vector is either numeric or factor or integer and
+#' FALSE otherwise.
+test_column_type <- function(x){
+  if (is.numeric(x) | is.factor(x) | is.integer(x)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
 }

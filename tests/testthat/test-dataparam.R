@@ -31,7 +31,7 @@ test_that("column types", {
   params <- list(primary_covs = "Group",
                  adjust_covs = "Cov1")
   expect_error(verify_input_data_parameters(expdata, params),
-               "Expected class")
+               "Expected classes of columns")
 })
 
 
