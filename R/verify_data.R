@@ -159,8 +159,9 @@ verify_expdata <- function(expdata){
 
   provided_params <- param_list[names(param_list) %in% possible_variables]
   for(i in names(provided_params)){
-    if(!(provided_params[[i]] %in% colnames(expdata$sample_ann))){
-      stop("Value for ", i, " in the `param_list` is expected, but not found ",
+    # all is for the cases where there are multiple values per key in the yaml
+    if(!all(provided_params[[i]] %in% colnames(expdata$sample_ann))){
+      stop("Values in the `param_list` not found ",
            "in the column names of `expdata$sample_ann`.",
            call. = FALSE)
     }
@@ -216,16 +217,21 @@ verify_expdata <- function(expdata){
     if (min_number_samples$n <= 3){
       if("ignore_sample_size" %in% names(param_list)){
         if(param_list$ignore_sample_size){
-          if (verbose) {
-            message("Min number of samples per category in the primary",
+          if(verbose){
+            message("Min number of samples per category in the primary ",
                     "covariate is fewer than 3.")
-          }
+            }
+        } else {
+          stop("Min number of samples per category in the primary covariate ",
+               "should be at least 3.",
+               call. = FALSE)
+
         }
       } else {
         stop("Min number of samples per category in the primary covariate ",
-             "should be at least 3.",
+             "should be at least 3 or ignore_sample_size parameter should be ",
+             "set to TRUE.",
              call. = FALSE)
-
       }
     }
   }
@@ -254,7 +260,7 @@ verify_expdata <- function(expdata){
   # if the number of samples in the data is fewer than the number of adjustment
   # parameters plus 2 then exit the calculations.
   if (nrow(expdata$sample_ann) < (length(param_list[["adjust_covs"]]) + 2)) {
-    stop("The number of samples is fewer is fewer than the number of ",
+    stop("The number of samples is fewer than the number of ",
          "adjustment variables plus 2.",
          call. = FALSE)
   }

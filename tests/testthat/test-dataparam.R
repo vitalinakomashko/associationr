@@ -9,10 +9,12 @@ test_that("param values in sample_ann columns", {
   expdata$gene_ann <- data.frame(Name = paste0("g", 1:10))
   params <- list(primary_covs = "group")
   expect_error(verify_input_data_parameters(expdata, params),
-               "`param_list` is expected, but not found")
-  params <- list(primary_covs = "Group", adjust_covs = "Cov2")
+               paste0("Values in the `param_list` not found ",
+                      "in the column names"))
+  params <- list(primary_covs = "Group", adjust_covs = c("Cov2", "Cov1"))
   expect_error(verify_input_data_parameters(expdata, params),
-               "`param_list` is expected, but not found")
+               paste0("Values in the `param_list` not found ",
+                      "in the column names"))
 })
 
 
@@ -60,17 +62,78 @@ test_that("need more than 1 unique value in the primary phenotype", {
   colnames(expdata$data) <- paste0("s", 1:10)
   rownames(expdata$data) <- paste0("g", 1:10)
   expdata$sample_ann <- data.frame(SAMPLE.ID = paste0("s",1:10),
-                                   Group = factor(c(1, rep(NA, 9))),
+                                   Group = factor(c(rep(1, 8),
+                                                    rep(NA, 2))),
                                    Cov1 = rnorm(10))
   expdata$gene_ann <- data.frame(Name = paste0("g", 1:10))
   params <- list(primary_covs = "Group",
                  adjust_covs = "Cov1")
   expect_error(verify_input_data_parameters(expdata, params),
                "Primary phenotype has only 1 unique value")
+})
+
+
+test_that("min number of samples", {
+  expdata <- list()
+  expdata$data <- matrix(rnorm(10*10), nrow = 10, ncol = 10)
+  colnames(expdata$data) <- paste0("s", 1:10)
+  rownames(expdata$data) <- paste0("g", 1:10)
+  expdata$sample_ann <- data.frame(SAMPLE.ID = paste0("s",1:10),
+                                   Group = factor(c(rep(1:4, each = 2),
+                                                    rep(NA, 2))),
+                                   Cov1 = rnorm(10))
+  expdata$gene_ann <- data.frame(Name = paste0("g", 1:10))
+  params <- list(primary_covs = "Group",
+                 adjust_covs = "Cov1")
+  expect_error(verify_input_data_parameters(expdata, params),
+                 paste0("Min number of samples per category in the primary covariate ",
+                 "should be at least 3 or ignore_sample_size parameter should be ",
+                 "set to TRUE."))
   params <- list(primary_covs = "Group",
                  adjust_covs = "Cov1",
                  ignore_sample_size = TRUE)
   expect_message(verify_input_data_parameters(expdata, params),
-                 "Min number of samples per category in the primary covariate is fewer than 3.")
+               paste0("Min number of samples per category in the primary ",
+                      "covariate is fewer than 3."))
+  params <- list(primary_covs = "Group",
+                 adjust_covs = "Cov1",
+                 ignore_sample_size = FALSE)
+  expect_error(verify_input_data_parameters(expdata, params),
+               paste0("Min number of samples per category in the primary covariate ",
+                      "should be at least 3."))
 })
 
+
+test_that("limma compatible values in primary_covs", {
+  expdata <- list()
+  expdata$data <- matrix(rnorm(10*10), nrow = 10, ncol = 10)
+  colnames(expdata$data) <- paste0("s", 1:10)
+  rownames(expdata$data) <- paste0("g", 1:10)
+  expdata$sample_ann <- data.frame(SAMPLE.ID = paste0("s",1:10),
+                                   Group = factor(c(rep(1, 5), rep(2, 4), NA)),
+                                   Cov1 = rnorm(10))
+  expdata$gene_ann <- data.frame(Name = paste0("g", 1:10))
+  params <- list(primary_covs = "Group",
+                 adjust_covs = "Cov1")
+  expect_equal(verify_input_data_parameters(expdata, params)$expdata$sample_ann$Group,
+                          factor(c(rep("X1", 5), rep("X2", 4))))
+  expect_message(verify_input_data_parameters(expdata, params),
+                 "not compatible with limma")
+})
+
+
+# test_that("number of samples fewer than the number of adjust_covs", {
+#   expdata <- list()
+#   expdata$data <- matrix(rnorm(10*10), nrow = 10, ncol = 10)
+#   colnames(expdata$data) <- paste0("s", 1:10)
+#   rownames(expdata$data) <- paste0("g", 1:10)
+#   expdata$sample_ann <- data.frame(SAMPLE.ID = paste0("s",1:10),
+#                                    Group = factor(c(rep(1, 5), rep(2, 4), NA)),
+#                                    Cov1 = rnorm(10))
+#   expdata$gene_ann <- data.frame(Name = paste0("g", 1:10))
+#   params <- list(primary_covs = "Group",
+#                  adjust_covs = paste0("Cov", 1:11))
+#   expect_error(verify_input_data_parameters(expdata, params),
+#                paste0("The number of samples is fewer than the number of ",
+#                       "adjustment variables plus 2."))
+# })
