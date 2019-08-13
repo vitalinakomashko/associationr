@@ -90,5 +90,15 @@ verify_parameters <- function(param_list){
            call. = FALSE)
     }
   }
+
+  # if "ignore_sample_size" is present then it should be set to TRUE or FALSE
+  if("ignore_sample_size" %in% names(param_list)){
+    if(!(param_list$ignore_sample_size == TRUE | param_list$ignore_sample_size == FALSE)){
+      stop("If parameter `ignore_sample_size` is provided it should be set ",
+           "to TRUE or FALSE.",
+           call. = FALSE)
+    }
+  }
+
   return(param_list)
 }

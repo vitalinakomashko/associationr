@@ -56,3 +56,23 @@ test_that("verify file path", {
   file_path <- ""
   expect_error(read_params(file_path))
 })
+
+
+test_that("verify ignore_sample_size is TRUE or FALSE if provided", {
+  params <- list(primary_covs = "Group",
+                 test_method = "limma",
+                 adjust_covs = "Group1",
+                 ignore_sample_size = "boop")
+  expect_error(verify_parameters(params),
+               "If parameter `ignore_sample_size` is provided it should be set to TRUE or FALSE.")
+  params <- list(primary_covs = "Group",
+                 test_method = "limma",
+                 adjust_covs = "Group1",
+                 ignore_sample_size = TRUE)
+  expect_equal(verify_parameters(params), params)
+  params <- list(primary_covs = "Group",
+                 test_method = "limma",
+                 adjust_covs = "Group1",
+                 ignore_sample_size = FALSE)
+  expect_equal(verify_parameters(params), params)
+})
