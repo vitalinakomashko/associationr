@@ -160,7 +160,7 @@ verify_expdata <- function(expdata){
   provided_params <- param_list[names(param_list) %in% possible_variables]
   for(i in names(provided_params)){
     if(!(provided_params[[i]] %in% colnames(expdata$sample_ann))){
-      stop("Value for ", i, "in the `param_list` is expected, but not found ",
+      stop("Value for ", i, " in the `param_list` is expected, but not found ",
            "in the column names of `expdata$sample_ann`.",
            call. = FALSE)
     }
@@ -169,11 +169,12 @@ verify_expdata <- function(expdata){
 
   # verify their type: should be numeric, factor or integer
   for(i in names(provided_params)){
-    if(!is.integer(expdata$sample.ann[[i]]) |
-       !is.numeric(expdata$sample.ann[[i]]) |
-       is.factor(expdata$sample.ann[[i]])){
-      stop("Expected class of ", i, "in `expdata$sample_ann` to be integer, ", "
-           numeric or factor.",
+    k <- provided_params[[i]]
+    if(!(is.integer(expdata$sample_ann[[k]]) |
+       is.numeric(expdata$sample_ann[[k]]) |
+       is.factor(expdata$sample_ann[[k]]))){
+      stop("Expected class of ", i, " in `expdata$sample_ann` is integer, ",
+           "numeric or factor.",
            call. = FALSE)
     }
   }
@@ -189,6 +190,7 @@ verify_expdata <- function(expdata){
   # in the sample annotation data frame also keep the samples without missing
   # values in the primary phenotype
   expdata$sample_ann <- expdata$sample_ann[indx, , drop = FALSE]
+
 
 
   # require that the main phenotype (primary_covs) has more than 1 unique value
@@ -211,14 +213,16 @@ verify_expdata <- function(expdata){
       dplyr::summarise(n = dplyr::n()) %>%
       dplyr::arrange(dplyr::desc(n)) %>%
       dplyr::slice(1)
-    if (min_number_samples$n < 3){
-      if(param_list$ignore_sample_size){
-        if (verbose) {
-          message("Min number of samples per category in the primary covariate",
-                  "is fewer than 3.")
+    if (min_number_samples$n <= 3){
+      if("ignore_sample_size" %in% names(param_list)){
+        if(param_list$ignore_sample_size){
+          if (verbose) {
+            message("Min number of samples per category in the primary",
+                    "covariate is fewer than 3.")
+          }
         }
       } else {
-        stop("Min number of samples per category in the primary covariate",
+        stop("Min number of samples per category in the primary covariate ",
              "should be at least 3.",
              call. = FALSE)
 
@@ -234,8 +238,8 @@ verify_expdata <- function(expdata){
         expdata$sample_ann[[primary_covs]]
         )
       )
-    if (!all.equal(primary_cov_valid_names,
-                  as.character(expdata$sample_ann[[primary_covs]]))) {
+    if (!all(primary_cov_valid_names ==
+             as.character(expdata$sample_ann[[primary_covs]]))) {
       if (verbose) {
         message("Character vectors in the column ", primary_covs,
                 "of `expdata$sample_ann` are not compatible with limma.",
@@ -280,5 +284,5 @@ verify_expdata <- function(expdata){
     param_list[["group_covs"]] <- param_list[["primary_covs"]]
   }
 
-  return(expdata = expdata, param_list = param_list)
+  return(list(expdata = expdata, param_list = param_list))
 }
