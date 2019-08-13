@@ -62,6 +62,20 @@ adjust_covs: Cov1
 test_method: lm
 interact_covs: Cov2
 ```
+
+To provide multiple values for certain parameters (for example, `adjust_covs`)
+use maps:
+
+```
+primary_covs: Group
+adjust_covs: 
+ - Cov1
+ - Cov2
+test_method: lm
+interact_covs: Cov2
+```
+
+
 ~~If the input data is RNA-seq and normalization factors should be calculated using
 `edgeR::calcNormFactors` and the data should be transformed to prepare for linear
 modeling using `limma::voom` then the following yaml formatting should be used:~~ 
