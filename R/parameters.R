@@ -56,6 +56,13 @@ verify_parameters <- function(param_list){
     }
   }
 
+  # check that primary_covs has only 1 element provided
+  if(length(param_list$primary_covs) != 1){
+    stop("Expecting only one variable for the `primary_covs`, however ",
+         "more than 1 is provided.",
+         call. = FALSE)
+  }
+
   # check that test_method is set to either limma or lm
   test_method_allowed <- c("limma", "lm")
   if (param_list$test_method != "limma" & param_list$test_method != "lm") {

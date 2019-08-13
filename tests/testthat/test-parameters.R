@@ -76,3 +76,13 @@ test_that("verify ignore_sample_size is TRUE or FALSE if provided", {
                  ignore_sample_size = FALSE)
   expect_equal(verify_parameters(params), params)
 })
+
+
+test_that("only one variable for the primary_covs", {
+  params <- list(primary_covs = c("Group", "Gender"),
+                 test_method = "limma",
+                 adjust_covs = "Group1")
+  expect_error(verify_parameters(params),
+               paste0("Expecting only one variable for the `primary_covs`, however ",
+                      "more than 1 is provided."))
+})
