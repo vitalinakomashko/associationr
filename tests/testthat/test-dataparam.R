@@ -79,8 +79,7 @@ test_that("min number of samples", {
   colnames(expdata$data) <- paste0("s", 1:10)
   rownames(expdata$data) <- paste0("g", 1:10)
   expdata$sample_ann <- data.frame(SAMPLE.ID = paste0("s",1:10),
-                                   Group = factor(c(rep(1:4, each = 2),
-                                                    rep(NA, 2))),
+                                   Group = factor(c(rep(1, 8), rep(2,2))),
                                    Cov1 = rnorm(10))
   expdata$gene_ann <- data.frame(Name = paste0("g", 1:10))
   params <- list(primary_covs = "Group",
@@ -101,6 +100,25 @@ test_that("min number of samples", {
   expect_error(verify_input_data_parameters(expdata, params),
                paste0("Min number of samples per category in the primary covariate ",
                       "should be at least 3."))
+})
+
+
+test_that("factor primary covariate can have only 2 levels", {
+  expdata <- list()
+  expdata$data <- matrix(rnorm(10*20), nrow = 10, ncol = 20)
+  colnames(expdata$data) <- paste0("s", 1:20)
+  rownames(expdata$data) <- paste0("g", 1:10)
+  expdata$sample_ann <- data.frame(SAMPLE.ID = paste0("s",1:20),
+                                   Group = factor(c(rep(1, 6),
+                                                    rep(3, 6),
+                                                    rep(4, 8))),
+                                   Cov1 = rnorm(20))
+  expdata$gene_ann <- data.frame(Name = paste0("g", 1:10))
+  params <- list(primary_covs = "Group",
+                 adjust_covs = "Cov1")
+  expect_error(verify_input_data_parameters(expdata, params),
+               paste0("Currently the package can handle a primary covariate with ",
+                      "no more than two classes."))
 })
 
 

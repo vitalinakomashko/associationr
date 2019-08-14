@@ -217,7 +217,7 @@ verify_expdata <- function(expdata){
     min_number_samples <- expdata$sample_ann %>%
       dplyr::group_by_at(primary_covs) %>%
       dplyr::summarise(n = dplyr::n()) %>%
-      dplyr::arrange(dplyr::desc(n)) %>%
+      dplyr::arrange(n) %>%
       dplyr::slice(1)
     if (min_number_samples$n <= 3){
       if("ignore_sample_size" %in% names(param_list)){
@@ -241,6 +241,18 @@ verify_expdata <- function(expdata){
     }
   }
 
+  # if primary phenotype is a categorical variable, verify that the number
+  # of levels is exactly two (this check is present in the function
+  # make_design_obj_interaction)
+  if(is.factor(expdata$sample_ann[[primary_covs]])){
+    primary_cov_levels <- levels(expdata$sample_ann[[primary_covs]])
+    if (length(primary_cov_levels) != 2) {
+      stop("Currently the package can handle a primary covariate with ",
+           "no more than two classes.",
+           call. = FALSE)
+    }
+  }
+
   # verify that values in the primary_covs variable are compatible with limma;
   # if not then create valid names using make.names()
   if (is.factor(expdata$sample_ann[[primary_covs]])) {
@@ -253,7 +265,7 @@ verify_expdata <- function(expdata){
              as.character(expdata$sample_ann[[primary_covs]]))) {
       if (verbose) {
         message("Character vectors in the column ", primary_covs,
-                "of `expdata$sample_ann` are not compatible with limma.",
+                " of `expdata$sample_ann` are not compatible with limma.",
                 "Will use `make.names()` to create syntactically valid names.")
       }
       expdata$sample_ann[[primary_covs]] <-
