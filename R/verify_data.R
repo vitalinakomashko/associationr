@@ -1,3 +1,6 @@
+# Functions for verification of the structure of input data and compatibility
+# with the analysis parameters provided through a YAML file.
+
 #' Verify provided data and its structure.
 #'
 #' @param expdata Named list with the data components: data, gene_ann and

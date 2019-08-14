@@ -1,3 +1,6 @@
+# Functions for reading a YAML file with analysis parameters and verifying
+# validity of parameters
+
 #' Read analysis parameters from a YAML file
 #'
 #' @param file_path Character string with a path to a YAML file.
