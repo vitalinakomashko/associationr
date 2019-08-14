@@ -62,44 +62,43 @@ make_design_obj_interaction <- function(sample_annotation,
       contrast.matrix <- NULL
       contrast.group <- NULL
     } else {
-      cnst.obj <- make_interaction_cnst(pheno,
+      cnst.obj <- make_interaction_cnst(sample_annotation,
                                         design,
                                         indx_coef,
-                                        INTERACT_COV)
+                                        interact_covs)
       colnames(design) <- make.names(colnames(design))
       contrast.matrix <- limma::makeContrasts(contrasts = cnst.obj$cnst,
                                               levels = design)
       contrast.group <- cnst.obj$cnst_group
     }
   } else {
-    p_cof_levels <- levels(pheno[[PRIMARY_COV]])
+    p_cof_levels <- levels(sample_annotation[[primary_covs]])
     if (length(p_cof_levels) != 2) {
       stop("now only can handle two classes")
     }
-    design <- model.matrix(as.formula(paste0("~0+",
-                                             paste(c(paste0(spline_func,
-                                                            "*",
-                                                            INTERACT_COV),
-                                                     ADJUST_COVS),
-                                                   collapse = "+"))),
-                           data = pheno)
-    indx_coef <- which(regexpr(spline_func,
+    design_form <- paste0("~0+",
+                          paste(c(paste0(spline_fun, "*",
+                                         interact_covs), adjust_covs),
+                                collapse = "+"))
+    design <- model.matrix(as.formula(design_form),
+                           data = sample_annotation)
+    indx_coef <- which(regexpr(spline_fun,
                                colnames(design),
                                fixed = TRUE) > 0 &
                          regexpr(":",
                                  colnames(design),
                                  fixed = TRUE) > 0 &
-                         regexpr(INTERACT_COV,
+                         regexpr(interact_covs,
                                  colnames(design),
                                  fixed = TRUE) > 0)
-    colnames(design) <- gsub(PRIMARY_COV, "", colnames(design))
+    colnames(design) <- gsub(primary_covs, "", colnames(design))
 
-    if (is.numeric(pheno[[INTERACT_COV]])) {
+    if (is.numeric(sample_annotation[[primary_covs]])) {
       colnames(design) <- make.names(colnames(design))
       contrast.matrix <- NULL
       contrast.group <- NULL
     } else {
-      colnames(design) <- gsub(INTERACT_COV, "", colnames(design))
+      colnames(design) <- gsub(interact_covs, "", colnames(design))
       colnames(design) <- make.names(colnames(design))
 
       if (length(indx_coef) == 1) {
@@ -126,16 +125,16 @@ make_design_obj_interaction <- function(sample_annotation,
         colname_contrast.matrix[1 : length(indx_coef)] <-
           paste0(colname_contrast.matrix[1 : length(indx_coef)],
                  "-",
-                 levels(pheno[[INTERACT_COV]])[1])
+                 levels(sample_annotation[[interact_covs]])[1])
         colnames(contrast.matrix) <- colname_contrast.matrix
         contrast.group <- colnames(contrast.matrix)
       }
     }
   }
 
-  colnames(design) <- gsub(INTERACT_COV, "", colnames(design))
-  colnames(contrast.matrix) <- gsub(INTERACT_COV, "", colnames(contrast.matrix))
-  rownames(contrast.matrix) <- gsub(INTERACT_COV, "", rownames(contrast.matrix))
+  colnames(design) <- gsub(interact_covs, "", colnames(design))
+  colnames(contrast.matrix) <- gsub(interact_covs, "", colnames(contrast.matrix))
+  rownames(contrast.matrix) <- gsub(interact_covs, "", rownames(contrast.matrix))
   #contrast.group = gsub(INTERACT_COV,"",contrast.group)
   return(list(indx_coef = indx_coef,
               design = design,
